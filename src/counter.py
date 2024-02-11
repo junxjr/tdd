@@ -33,7 +33,7 @@ def update_counter(name):
     COUNTERS[name] = COUNTERS[name] + 1
     return {name: COUNTERS[name]}, status.HTTP_200_OK
 
-# Create a route for method PUT on endpoint /counters/<name>.
+# Create a route for method GET on endpoint /counters/<name>.
 
 
 @app.route('/counters/<name>', methods=['GET'])
@@ -43,3 +43,14 @@ def read_counter(name):
     global COUNTERS
 
     return {name: COUNTERS[name]}, status.HTTP_200_OK
+
+# Create a route for method DELETE on endpoint /counters/<name>.
+
+
+@app.route('/counters/<name>', methods=['DELETE'])
+def delete_counter(name):
+    """delete a counter"""
+    app.logger.info(f"Request to delete counter: {name}")
+    global COUNTERS
+
+    return {name: COUNTERS[name]}, status.HTTP_204_NO_CONTENT
