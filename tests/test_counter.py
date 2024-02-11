@@ -19,11 +19,13 @@ from src.counter import app
 # we need to import the file that contains the status codes
 from src import status
 
+
 class CounterTest(TestCase):
+
     """Counter tests"""
 
     def setUp(self):
-      self.client = app.test_client()
+        self.client = app.test_client()
 
     def test_create_a_counter(self):
         """It should create a counter"""
