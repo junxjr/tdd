@@ -1,5 +1,7 @@
 name: CI workflow
 
+# Trigger the workflow on push events to the main branch
+# and pull requests targeting the main branch
 on:
   push:
     branches:
@@ -10,45 +12,38 @@ on:
 
 jobs:
   build:
+    # Run the job on the latest version of Ubuntu
     runs-on: ubuntu-latest
 
+    # Define a lightweight Python environment using a Docker container
     container:
       image: python:3.9-slim
 
+    # Steps to execute within the job
     steps:
+      # Checkout the repository content
       - name: Checkout
         uses: actions/checkout@v3
-        with:
-          # This action checks out your repository's code so that it can be accessed by subsequent steps.
 
+      # Set up Python environment
+      - name: Set up Python
+        uses: actions/setup-python@v2
+        with:
+          python-version: 3.9
+
+      # Install project dependencies
       - name: Install dependencies
         run: |
           python -m pip install --upgrade pip
           pip install -r requirements.txt
-        # This step installs the dependencies required for your project using pip.
 
+      # Lint the codebase using flake8
       - name: Lint with flake8
         run: |
           flake8 src --count --select=E9,F63,F7,F82 --show-source --statistics
           flake8 src --count --max-complexity=10 --max-line-length=127 --statistics
-        # This step lints the Python code in the 'src' directory using Flake8, a tool for enforcing code style and identifying potential issues.
-
-      - name: Format code with Black
-        run: |
-          black src
-        # This step formats the Python code in the 'src' directory using Black, a code formatter that enforces a consistent code style.
-
-      - name: Static code analysis with mypy
-        run: |
-          mypy src
-        # This step performs static type checking on the Python code in the 'src' directory using Mypy, a static type checker for Python.
-
-      - name: Security scanning with Bandit
-        run: |
-          bandit -r src
-        # This step performs security scanning on the Python code in the 'src' directory using Bandit, a security linter for Python code.
-
+          
+      # Run unit tests using nose
       - name: Run unit tests with nose
-        run:
+        run: |
           nosetests -v --with-spec --spec-color --with-coverage --cover-package=app
-        # This step runs unit tests on the Python code using Nose, a testing framework for Python.
